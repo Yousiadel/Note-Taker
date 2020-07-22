@@ -109,18 +109,25 @@ var renderNoteList = function (notes) {
 
     var noteListItems = [];
 
-    for (var i = 0; i < notes.length; i++) {
-        var note = notes[i];
-
-        var $li = $("<li class='list-group-item'>").data(note);
-        var $span = $("<span>").text(note.title);
-        var $delBtn = $(
-            "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
-        );
-
-        $li.append($span, $delBtn);
-        noteListItems.push($li);
+    const create$li = (text, withDeleteButton = true) => {
+        const $li = $("<li class='list-group-item'>");
+        const $span = $("<span>").text(text);
+        $li.append($span);
+        if (withDeleteButton) {
+            const $delBtn = $(
+                "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
+            );
+            $li.append($delBtn);
+        }
+        return $li;
+    };
+    if (notes.length === 0) {
+        noteListItems.push(create$li("No saved Notes", false));
     }
+    notes.forEach((note) => {
+        const $li = create$li(note.title).data(note);
+        noteListItems.push($li);
+    });
 
     $noteList.append(noteListItems);
 };

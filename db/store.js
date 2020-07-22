@@ -1,5 +1,6 @@
 const util = require("util");
 const fs = require("fs");
+const uuidv1 = require("uuid/v1");
 
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
@@ -37,7 +38,8 @@ class Store {
         }
 
         // Increment `this.lastId` and assign it to `newNote.id`
-        const newNote = { title, text, id: ++this.lastId };
+        const newNote = { title, text, id: uuidv1() };
+        console.log("newNote");
 
         // Get all notes, add the new note, write all the updated notes, return the newNote
         return this.getNotes()
@@ -49,7 +51,7 @@ class Store {
     removeNote(id) {
         // Get all notes, remove the note with the given id, write the filtered notes
         return this.getNotes()
-            .then(notes => notes.filter(note => note.id !== parseInt(id)))
+            .then(notes => notes.filter(note => note.id !== id ))
             .then(filteredNotes => this.write(filteredNotes));
     }
 }
